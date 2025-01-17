@@ -11,7 +11,7 @@ More importantly, Ivy runs totally on your machine to ensure privacy, so you can
 ## Getting Started
 #### Prerequisites
 * Python 3.12+
-* Ollama (See (https://ollama.com)[https://ollama.com])
+* Ollama (See [https://ollama.com](https://ollama.com))
 
 #### Quick start
 ```bash
@@ -29,7 +29,7 @@ poetry run python app.py
 
 We welcome contributions from the community!
 Feel free to open an issue or submit a pull request.
-Or join our discord server at (https://discord.gg/VCBpySQ5)[https://discord.gg/VCBpySQ5] to chat with us.
+Or join our discord server at [https://discord.gg/VCBpySQ5](https://discord.gg/VCBpySQ5) to chat with us.
 
 ## License
 Ivysis is licensed under the AGPL-3.0 license. See the [LICENSE](LICENSE) file for more details.
