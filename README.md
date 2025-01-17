@@ -2,7 +2,7 @@
 To build a personal AI secretary who understands you and works for you proactively and confidentially.
 
 ## Overview
-Ivysis is an open-source project aimed to create a personal AI secretary (called Ivy) who assists you seamlessly across your personal and professional life, just like a real human-secretary.
+Ivysis (**IVY** **S**ecretarial **I**ntelligence **S**ystem) is an open-source project aimed to create a personal AI secretary (called Ivy) who assists you seamlessly across your personal and professional life, just like a real human-secretary.
 
 Ivy proactively organizes, notifies and reminds you about the tasks or updates in your professional and personal life. She understands you so well that she only delivers what you need to know.
 
