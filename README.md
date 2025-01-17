@@ -6,7 +6,7 @@ Ivysis (**IVY** **S**ecretarial **I**ntelligence **S**ystem) is an open-source p
 
 Ivy proactively organizes, notifies and reminds you about the tasks or updates in your professional and personal life. She understands you so well that she only delivers what you need to know.
 
-More importantly, Ivy runs totally on your machine to ensure privacy, so you can feel free to chat with Ivy for anything.
+More importantly, Ivy runs totally on your machine to ensure privacy, so you can feel free granting Ivy accesses of your personal data, to best leverage Ivy to work for you.
 
 ## Getting Started
 #### Prerequisites
