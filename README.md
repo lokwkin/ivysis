@@ -19,7 +19,7 @@ More importantly, Ivy runs totally on your machine to ensure privacy, so you can
 poetry install
 
 # Start serving local LLM using Ollama
-ollama run qwen2.5-3b  # or other model of your choice
+ollama run qwen2.5:7b  # or other model of your choice
 
 # Quick Start
 poetry run python app.py
