@@ -13,7 +13,7 @@ import uuid
 from llm.templates.default import DEFAULT_TEMPLATE
 
 logger = get_logger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 T = TypeVar('T', bound=BaseModel)
 
