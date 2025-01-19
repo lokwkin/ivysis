@@ -32,4 +32,4 @@ Feel free to open an issue or submit a pull request.
 Or join our discord server at [https://discord.gg/VCBpySQ5](https://discord.gg/VCBpySQ5) to chat with us.
 
 ## License
-Ivysis is licensed under the AGPL-3.0 license. See the [LICENSE](LICENSE) file for more details.
+Ivysis is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
