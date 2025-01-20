@@ -11,6 +11,8 @@ python = "^3.12"
 ollama = "^0.4.6"
 colorama = "^0.4.6"
 pystache = "^0.6.7"
+python-dateutil = "^2.9.0.post0"
+docling = "^2.15.1"
 
 
 [build-system]

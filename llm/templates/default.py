@@ -12,9 +12,4 @@ DEFAULT_TEMPLATE = LLMTemplate(
     system_message="You are a helpful assistant.",
     user_message="",
     output_model=DefaultOutput,
-    output_schema="""
-{
-    response: str
-}
-"""
 )

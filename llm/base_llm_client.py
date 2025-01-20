@@ -13,7 +13,7 @@ import uuid
 from llm.templates.default import DEFAULT_TEMPLATE
 
 logger = get_logger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.WARN)
 
 T = TypeVar('T', bound=BaseModel)
 
@@ -82,7 +82,7 @@ class BaseLLMClient():
 
             response_dict = json.loads(llm_response.response_str)
 
-            logger.info(f"{Fore.YELLOW}<{request_id}> [{template_name}] Response Parsed:\n{
+            logger.debug(f"{Fore.YELLOW}<{request_id}> [{template_name}] Response Parsed:\n{
                 json.dumps(response_dict, indent=2)}{Fore.RESET}")
 
             return OutputModel(**response_dict)
