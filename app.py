@@ -1,65 +1,42 @@
 
 import datetime
-import json
 from data_loader.gmail_fetcher import GmailFetcher
 from llm.ollama_client import OllamaClient
-from llm.templates.biography_formation import BIOGRAPHY_FORMATION
 import argparse
-from llm.templates.email_uniqueness import EMAIL_UNIQUENESS
-
-from llm.templates.persona_extraction import PERSONA_EXTRACTION
+from persona.pesrona_builder import PersonaBuilder
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--email", required=True, help="Email address")
-parser.add_argument("--password", required=True, help="Password")
+parser.add_argument("--email", required=False, help="Email address")
+parser.add_argument("--password", required=False, help="Password")
+parser.add_argument("--days", required=False, default=3, help="Days")
+parser.add_argument("--load_implications", required=False, default=None, help="Load implications from file")
+
 args = parser.parse_args()
 
-
-# Setup Gmail connection
-gmail_fetcher = GmailFetcher(email=args.email, password=args.password)
-
 # Setup LLM client
-llm_client = OllamaClient(default_model="qwen2.5:7b")
+llm_client = OllamaClient(default_model="internlm3-8b-instruct")
 
-# Fetch emails from Gmail
-gmail_messages = gmail_fetcher.fetch_emails(days=3)
+storage_folder = f"./data/{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}"
 
+persona_builder = PersonaBuilder(storage_path=storage_folder)
 
-implications = []
-for gmail_message in gmail_messages:
-    print(gmail_message.subject, gmail_message.sender, gmail_message.date)
-    persona_extraction_result = llm_client.prompt(
-        template=PERSONA_EXTRACTION,
-        template_params={
-            "subject": gmail_message.subject,
-            "date": gmail_message.date,
-            "sender": gmail_message.sender,
-            "body": gmail_message.body,
-        },
-    )
+if args.email and args.password:
 
-    email_uniqueness_result = llm_client.prompt(
-        template=EMAIL_UNIQUENESS,
-        template_params={
-            "subject": gmail_message.subject,
-            "date": gmail_message.date,
-            "sender": gmail_message.sender,
-        },
-    )
-    implications.extend(
-        {
-            "description": implication.description,
-            "weight": email_uniqueness_result.score,
-        }
-        for implication in persona_extraction_result.implications
-    )
+    # Fetch emails from Gmail
+    gmail_fetcher = GmailFetcher(email=args.email, password=args.password, storage_path=storage_folder)
+    gmail_messages = gmail_fetcher.fetch_emails(days=args.days)
+    persona_builder.digest_emails(gmail_messages)
 
-with open(f"implications_{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json", "w") as f:
-    json.dump(implications, f, indent=2)
+    biography = persona_builder.write_biography()
+    print(biography)
 
+elif args.load_implications:
+    # Load implications from file
+    persona_builder.load_implications(args.load_implications)
 
-llm_result = llm_client.prompt(
-    template=BIOGRAPHY_FORMATION,
-    template_params={"implications": implications},
-)
-print(llm_result.description)
+    biography = persona_builder.write_biography()
+    print(biography)
+
+else:
+    parser.print_help()
+    exit(1)

@@ -4,15 +4,14 @@ from llm.schemas.base import LLMTemplate
 from llm.templates.default import DEFAULT_TEMPLATE
 
 
-class EmailImplicationOutput(BaseModel):
+class EmailImplicationResult(BaseModel):
     reasoning: str
     scenarios: List[str]
     # aspects: List[str]
     # score: int
 
 
-EMAIL_IMPLICATION = LLMTemplate(
-    name="email_classifier",
+EmailImplicationPrompt = LLMTemplate(
     system_message=DEFAULT_TEMPLATE.system_message,
     user_message="""You are given the subject and sender of the user's email.
 Suggest any likely scenarios in which the user might receive this email. (Could be none or multiple)
@@ -41,5 +40,5 @@ You must return a JSON object with following schema:
     "scenarios": List[str]
 }
 """,
-    output_model=EmailImplicationOutput,
+    output_model=EmailImplicationResult,
 )

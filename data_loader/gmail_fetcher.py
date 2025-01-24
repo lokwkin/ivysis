@@ -50,6 +50,8 @@ class GmailFetcher(BaseEmailFetcher):
                 subject = decode_header(email_msg["Subject"])[0][0]
                 subject = subject if isinstance(subject, str) else subject.decode()
                 sender = email_msg["From"]
+                to = email_msg["To"]
+                cc = email_msg["Cc"]
                 date = parser.parse(email_msg["Date"])
 
                 # Get body and attachments
@@ -70,6 +72,8 @@ class GmailFetcher(BaseEmailFetcher):
                 email_message = EmailMessage(
                     subject=subject,
                     sender=sender,
+                    to=to,
+                    cc=cc,
                     date=date,
                     body=body,
                     attachments=attachments,

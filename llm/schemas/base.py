@@ -5,7 +5,6 @@ T = TypeVar('T', bound=BaseModel)
 
 
 class LLMTemplate(BaseModel, Generic[T]):
-    name: str
     system_message: str
     user_message: str
     output_model: Type[T]

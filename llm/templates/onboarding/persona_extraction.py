@@ -7,15 +7,13 @@ class Implication(BaseModel):
     description: str
 
 
-class PersonaExtraction(BaseModel):
+class PersonaExtractionResult(BaseModel):
     implications: list[Implication]
 
 
-PERSONA_EXTRACTION = LLMTemplate(
-    name="persona_extraction",
+PersonaExtractionPrompt = LLMTemplate(
     system_message="You are a personal secretary of your boss. You are trying to understand your boss background and personality from the emails he sent and received.",
-    user_message="""
-You are given the subject, date and sender address of an email received by your boss.
+    user_message="""You are given the meta data of an email received by your boss.
 
 Suggest any information about your boss (the receiver) that can be implied from the email, under following categories:
 Category (scope of the category)
@@ -30,6 +28,7 @@ Category (scope of the category)
 - "profession" (Current profession or occupation.)
 
 Each implication should focus on one single fact.
+FYI your boss's email address is {{address}}, use this to determine whether the email is sent or received by your boss.
 
 [Examples]
 Email Subject: Medium Weekly Digest for Liverpool and Manchester United
@@ -61,11 +60,12 @@ Email Subject: New restaurants people in Peninsula love
     "implications": []  # Not likely related to boss
 }
 
-
 [Email]
 Subject: {{subject}}
 Date: {{date}}
-Sender: {{sender}}
+From: {{sender}}
+To: {{to}}
+Cc: {{cc}}
 
 You must return a JSON object with following schema:
 <JsonSchema>
@@ -79,7 +79,7 @@ You must return a JSON object with following schema:
 }
 </JsonSchema>
 """,
-    output_model=PersonaExtraction,
+    output_model=PersonaExtractionResult,
 )
 
 

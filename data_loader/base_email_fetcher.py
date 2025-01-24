@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 from pydantic import BaseModel
 from pathlib import Path
 import json
@@ -9,6 +9,8 @@ import json
 class EmailMessage(BaseModel):
     subject: str
     sender: str
+    to: Optional[str]
+    cc: Optional[str]
     date: datetime
     body: str
     attachments: List[Dict[str, str | None]]
@@ -37,6 +39,8 @@ class BaseEmailFetcher:
         email_dict = {
             "subject": email_data.subject,
             "sender": email_data.sender,
+            "to": email_data.to,
+            "cc": email_data.cc,
             "date": email_data.date.isoformat(),
             "body": email_data.body,
             "attachments": email_data.attachments,

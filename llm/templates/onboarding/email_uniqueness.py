@@ -1,16 +1,15 @@
 from pydantic import BaseModel
 from llm.schemas.base import LLMTemplate
-from llm.templates.default import DEFAULT_TEMPLATE
+from llm.templates.default import DefaultTemplate
 
 
-class EmailUniqueness(BaseModel):
+class EmailUniquenessResult(BaseModel):
     reasoning: str
     score: int
 
 
-EMAIL_UNIQUENESS = LLMTemplate(
-    name="email_uniqueness",
-    system_message=DEFAULT_TEMPLATE.system_message,
+EmailUniquenessPrompt = LLMTemplate(
+    system_message=DefaultTemplate.system_message,
     user_message="""
 You are given the subject, date and sender address of an email received by your boss.
 
@@ -33,5 +32,5 @@ You must return a JSON object with following schema:
 }
 </JsonSchema>
 """,
-    output_model=EmailUniqueness,
+    output_model=EmailUniquenessResult,
 )
