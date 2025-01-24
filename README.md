@@ -21,9 +21,22 @@ poetry install
 # Start serving local LLM using Ollama
 ollama run qwen2.5:7b  # or other model of your choice
 
-# Quick Start
-poetry run python app.py
+# Start the app
+
+# usage: app.py [-h] [--email EMAIL] [--password PASSWORD] [--days DAYS] [--load_implications LOAD_IMPLICATIONS]
+# options:
+# -h, --help            show this help message and exit
+# --email EMAIL         Email address
+# --password PASSWORD   Password
+# --days DAYS           Days
+# --load_implications LOAD_IMPLICATIONS
+#                       Load implications from file
+
+poetry run python app.py --email=example@gmail.com --password='1234 5678 abcd efgh' 
 ```
+As a POC, we currently only support fetching emails from Gmail. 
+Please see [App Passwords](https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237) on instruction on how to create a "App Password" which is the Google way to grant Gmail access to applications for access programmatically.
+
 
 ## Contributing
 
