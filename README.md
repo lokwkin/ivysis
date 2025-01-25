@@ -23,14 +23,19 @@ ollama run qwen2.5:7b  # or other model of your choice
 
 # Start the app
 
-# usage: app.py [-h] [--email EMAIL] [--password PASSWORD] [--days DAYS] [--load_implications LOAD_IMPLICATIONS]
+# usage: app.py [-h] [--email EMAIL] [--password PASSWORD] [--days DAYS] [--load_implications LOAD_IMPLICATIONS] [--load_biography LOAD_BIOGRAPHY] [--digest_email DIGEST_EMAIL]
+
 # options:
-# -h, --help            show this help message and exit
-# --email EMAIL         Email address
-# --password PASSWORD   Password
-# --days DAYS           Days
-# --load_implications LOAD_IMPLICATIONS
-#                       Load implications from file
+#   -h, --help            show this help message and exit
+#   --email EMAIL         Email address
+#   --password PASSWORD   Password
+#   --days DAYS           Days
+#   --load_implications LOAD_IMPLICATIONS
+#                         implications file path
+#   --load_biography LOAD_BIOGRAPHY
+#                         Biography file path
+#   --digest_email DIGEST_EMAIL
+#                         Email json file path
 
 poetry run python app.py --email=example@gmail.com --password='1234 5678 abcd efgh' 
 ```
