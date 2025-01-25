@@ -1,4 +1,4 @@
-from typing import Generic, Type, TypeVar
+from typing import Generic, Optional, Type, TypeVar
 from pydantic import BaseModel
 
 T = TypeVar('T', bound=BaseModel)
@@ -15,7 +15,7 @@ class LLMRequest(BaseModel):
     user_message: str
     temperature: float = 0.3
     max_tokens: int = 4096
-    model: str = "llama3.1"
+    model: Optional[str] = None
 
 
 class LLMTokenUsage(BaseModel):

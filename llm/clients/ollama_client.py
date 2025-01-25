@@ -1,6 +1,6 @@
 from typing import Optional
 import ollama
-from llm.base_llm_client import BaseLLMClient
+from llm.clients.base_llm_client import BaseLLMClient
 from llm.schemas.base import LLMRequest, LLMResponse, LLMTokenUsage
 from common.logger import get_logger
 

@@ -1,11 +1,14 @@
 import json
 import os
 from typing import Dict, List
+
+from pydantic import BaseModel
 from common.logger import get_logger
 
 from data_loader.base_email_fetcher import EmailMessage
-from llm.ollama_client import OllamaClient
+from llm.clients.base_llm_client import BaseLLMClient
 from llm.templates.onboarding.biography_formation import BiographyFormationPrompt
+from llm.templates.onboarding.biography_writing import BiographyWritingPrompt
 from llm.templates.onboarding.email_uniqueness_batch import EmailUniquenessPrompt
 from llm.templates.onboarding.persona_extraction_batch import PersonaExtractionBatchPrompt
 
@@ -13,14 +16,23 @@ from llm.templates.onboarding.persona_extraction_batch import PersonaExtractionB
 logger = get_logger(__name__)
 
 
+class PersonaHypothesis(BaseModel):
+    category: str
+    description: str
+    weight: int
+
+    class Config:
+        extra = 'allow'
+
+
 class PersonaBuilder:
 
-    implications: List[Dict[str, str]]
+    persona_hypothesis_list: List[PersonaHypothesis]
 
-    def __init__(self, storage_path: str):
-        self.llm_client = OllamaClient(default_model="qwen2.5:7b")
+    def __init__(self, llm_client: BaseLLMClient, storage_path: str):
+        self.llm_client = llm_client
         self.email_batch_size = 10
-        self.implications = []
+        self.persona_hypothesis_list = []
         self.storage_path = storage_path
 
         if not os.path.exists(self.storage_path):
@@ -63,30 +75,47 @@ class PersonaBuilder:
                     continue
 
                 for implication in mapped_implication_email.implications:
-                    self.implications.append(
-                        {
-                            "subject": input_email.subject,
-                            "category": implication.category,
-                            "description": implication.description,
-                            "weight": mapped_uniqueness_email.score,
-                        }
-                    )
+                    self.implications.append(PersonaHypothesis(
+                        category=implication.category,
+                        description=implication.description,
+                        weight=mapped_uniqueness_email.score,
+                    ))
 
         with open(f"{self.storage_path}/implications.json", "w") as f:
             json.dump(self.implications, f, indent=2)
 
     def load_implications(self, implication_path: str):
         with open(implication_path, "r") as f:
-            self.implications = json.load(f)
+            self.persona_hypothesis_list = [PersonaHypothesis(**item) for item in json.load(f)]
 
     def write_biography(self):
-        top_implications = list(filter(lambda x: x["weight"] >= 4, self.implications))
 
-        llm_result = self.llm_client.prompt(
-            template=BiographyFormationPrompt,
-            template_params={"implications": top_implications},
+        markdown = ""
+
+        # Group implications by category
+        hypoethesis_by_category: Dict[str, List[PersonaHypothesis]] = {}
+        for hypothesis in self.persona_hypothesis_list:
+            if hypothesis.category not in hypoethesis_by_category:
+                hypoethesis_by_category[hypothesis.category] = []
+            hypoethesis_by_category[hypothesis.category].append(hypothesis)
+
+        for category, hypothesis_list in hypoethesis_by_category.items():
+            # Sort implications by weight in descending order
+            sorted_hypothesis = sorted(hypothesis_list, key=lambda x: x.weight, reverse=True)
+
+            # Keep top 50% of implications
+            num_to_keep = max(1, len(sorted_hypothesis) // 2)  # Keep at least 1
+            hypothesis_list = sorted_hypothesis[:num_to_keep]
+            llm_result = self.llm_client.prompt(
+                template=BiographyFormationPrompt,
+                template_params={"implications": hypothesis_list},
+            )
+            markdown += f"## {category}\n\n{llm_result.description}\n\n"
+
+        biography_writing_result = self.llm_client.prompt(
+            template=BiographyWritingPrompt,
+            template_params={"draft": markdown},
         )
 
         with open(f"{self.storage_path}/biography.txt", "w") as f:
-            f.write(llm_result.description)
-        return llm_result.description
+            f.write(biography_writing_result.biography)

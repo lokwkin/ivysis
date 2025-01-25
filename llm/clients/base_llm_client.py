@@ -73,7 +73,7 @@ class BaseLLMClient():
             logger.debug(f"{Fore.GREEN}<{request_id}> [{template_name}] User Message: {
                          json.dumps(user_message)}{Style.RESET_ALL}")
 
-            llm_input = LLMRequest(user_message=user_message, system_message=system_message, model='llama3.1')
+            llm_input = LLMRequest(user_message=user_message, system_message=system_message, temperature=0, max_tokens=8192)
             ts = time.time()
             llm_response = self._request(llm_input)
             time_used_ms = int((time.time() - ts) * 1000)
