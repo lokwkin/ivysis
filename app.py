@@ -1,17 +1,17 @@
-
-import datetime
-from data_loader.base_email_fetcher import EmailMessage
-from data_loader.gmail_fetcher import GmailFetcher
-from digest.information_extractor import InformationExtractor
-from llm.clients.groq_client import GroqClient
-# from llm.ollama_client import OllamaClient
-import argparse
-import os
-from llm.clients.ollama_client import OllamaClient
 from persona.pesrona_builder import PersonaBuilder
+from mindmap.mindmap_builder import MindmapBuilder
+from llm.clients.ollama_client import OllamaClient
+import os
+import argparse
+from llm.clients.groq_client import GroqClient
+from data_loader.gmail_fetcher import GmailFetcher
+from data_loader.base_email_fetcher import EmailMessage
+import datetime
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=True)
+
+# from llm.ollama_client import OllamaClient
 
 
 parser = argparse.ArgumentParser()
@@ -25,7 +25,7 @@ args = parser.parse_args()
 
 # Setup LLM client
 if os.getenv("LLM_PROVIDER") == "ollama":
-    llm_client = OllamaClient(default_model=os.getenv("OLLAMA_MODEL") or "internlm3-8b-instruct")
+    llm_client = OllamaClient(default_model=os.getenv("OLLAMA_MODEL") or "qwen2.5:7b")
 elif os.getenv("LLM_PROVIDER") == "groq":
     llm_client = GroqClient(api_key=os.getenv("GROQ_API_KEY"), default_model=os.getenv("GROQ_MODEL") or "llama-3.1-8b-instant")
 
@@ -57,6 +57,12 @@ if args.digest_email:
     with open(args.digest_email, "r") as file:
         email_content = EmailMessage.model_validate_json(file.read())
 
-    information_extractor = InformationExtractor(llm_client, biography)
-    extractions = information_extractor.digest(email_content)
-    print(extractions)
+    mindmap = MindmapBuilder(llm_client, biography)
+    extractions = mindmap.digest_email(email_content)
+
+    for extraction in extractions:
+        # print(extraction.summary)
+        print(extraction.type)
+        print(extraction.source.date)
+        print(extraction.details)
+        print("---")
