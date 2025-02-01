@@ -8,6 +8,10 @@ logger = get_logger(__name__)
 
 
 class GroqClient(BaseLLMClient):
+
+    client: Groq
+    default_model: str
+
     def __init__(self, api_key: str, default_model: Optional[str] = None):
         """Initialize Groq client with optional API key configuration.
 

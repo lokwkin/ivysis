@@ -1,5 +1,5 @@
 from typing import Optional
-import ollama
+from ollama import Client
 from llm.clients.base_llm_client import BaseLLMClient
 from llm.schemas.base import LLMRequest, LLMResponse, LLMTokenUsage
 from common.logger import get_logger
@@ -8,6 +8,10 @@ logger = get_logger(__name__)
 
 
 class OllamaClient(BaseLLMClient):
+
+    client: Client
+    default_model: str
+
     def __init__(self, host: Optional[str] = None, default_model: Optional[str] = None):
         """Initialize Ollama client with optional host configuration.
 
@@ -15,8 +19,7 @@ class OllamaClient(BaseLLMClient):
             host: Optional host URL for Ollama server (e.g., 'http://localhost:11434')
         """
         super().__init__()
-        if host:
-            ollama.set_host(host)
+        self.client = Client(host=host or "http://localhost:11434")
         if default_model:
             self.default_model = default_model
         else:
@@ -31,8 +34,8 @@ class OllamaClient(BaseLLMClient):
         Returns:
             LLMRawResponse with the model's response and token usage
         """
-        response = ollama.generate(
-            model=prompt_input.model,
+        response = self.client.generate(
+            model=prompt_input.model or self.default_model,
             prompt=prompt_input.user_message,
             system=prompt_input.system_message,
             format="json"

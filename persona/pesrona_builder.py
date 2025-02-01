@@ -35,9 +35,6 @@ class PersonaBuilder:
         self.persona_hypothesis_list = []
         self.storage_path = storage_path
 
-        if not os.path.exists(self.storage_path):
-            os.makedirs(self.storage_path)
-
     def digest_emails(self, emails: List[EmailMessage]):
 
         # split emails into batches
@@ -81,6 +78,8 @@ class PersonaBuilder:
                         weight=mapped_uniqueness_email.score,
                     ))
 
+        if not os.path.exists(self.storage_path):
+            os.makedirs(self.storage_path)
         with open(f"{self.storage_path}/implications.json", "w") as f:
             json.dump(self.implications, f, indent=2)
 
@@ -117,5 +116,7 @@ class PersonaBuilder:
             template_params={"draft": markdown},
         )
 
+        if not os.path.exists(self.storage_path):
+            os.makedirs(self.storage_path)
         with open(f"{self.storage_path}/biography.txt", "w") as f:
             f.write(biography_writing_result.biography)
