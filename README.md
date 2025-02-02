@@ -60,11 +60,12 @@ poetry run python app.py memoboard --load_persona ./persona.txt --email ./email.
 - [ ] Simplfied initial setup and onboarding
 
 #### Phase 2
-- [ ] Schedule and reminder
-- [ ] Informative updates organization
-- [ ] Proactive notifications triggered by system
-- [ ] Support Outlook as datasource
-- [ ] Support Slack as datasource
+[ ] Persona builder focused on specific areas
+[ ] Schedule and reminder
+[ ] Informative updates organization
+[ ] Proactive notifications triggered by system
+[ ] Support Outlook as datasource
+[ ] Support Slack as datasource
 
 
 ## Contributing
