@@ -44,14 +44,14 @@ elif os.getenv("LLM_PROVIDER") == "groq":
     llm_client = GroqClient(api_key=os.getenv("GROQ_API_KEY"), default_model=os.getenv("GROQ_MODEL") or "llama-3.1-8b-instant")
 
 
-storage_folder = f"./data/{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
+data_dir = f"./data/{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}"
 
 
 persona_desc = None
 
 # Handle Build Persona command
 if args.command == "persona":
-    persona_builder = PersonaBuilder(llm_client=llm_client, storage_path=storage_folder)
+    persona_builder = PersonaBuilder(llm_client=llm_client, storage_path=data_dir)
 
     if args.load_checkpoint:
         persona_builder.load_checkpoint(args.load_checkpoint)
@@ -60,7 +60,7 @@ if args.command == "persona":
         gmail_fetcher = GmailFetcher(
             email=args.email_addr,
             password=args.email_pwd,
-            storage_path=storage_folder
+            storage_path=data_dir
         )
         gmail_messages = gmail_fetcher.fetch_emails(days=args.days)
         persona_builder.digest_emails(gmail_messages)
@@ -75,8 +75,8 @@ elif args.command == "memoboard":
     with open(args.email, "r") as file:
         email_content = EmailMessage.model_validate_json(file.read())
 
-    memoboard_builder = MemoboardBuilder(llm_client, persona_desc)
-    memos = memoboard_builder.read_email(email_content)
+    memoboard_builder = MemoboardBuilder(llm_client, persona_desc, data_dir)
+    memos = memoboard_builder.process_email(email_content)
 
 else:
     print("Invalid command")

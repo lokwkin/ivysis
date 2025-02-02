@@ -1,5 +1,5 @@
 import json
-import os
+from common.utils import safe_write_file
 from typing import Dict, List
 
 from pydantic import BaseModel
@@ -36,7 +36,7 @@ class PersonaBuilder:
         self._llm_client = llm_client
         self._email_batch_size = 10
         self._persona_hypothesis_list = []
-        self._storage_path = storage_path
+        self._storage_path = f"{storage_path}/persona"
         self._persona = None
 
     def get_persona(self):
@@ -64,7 +64,7 @@ class PersonaBuilder:
 
     def _process_emails(self, email_batch: List[EmailMessage]) -> List[PersonaHypothesis]:
         """
-        Process email headers including subject, sender and recipient to extract implication from the email. 
+        Process email headers including subject, sender and recipient to extract implication from the email.
         Return a list of hypothesis to the user persona.
         """
 
@@ -145,21 +145,15 @@ class PersonaBuilder:
         """
         Save the biography into local storage.
         """
-        checkpoint_dir = f"{self._storage_path}/checkpoint_{checkpoint_idx}"
-        if not os.path.exists(checkpoint_dir):
-            os.makedirs(checkpoint_dir)
-        with open(f"{checkpoint_dir}/persona.txt", "w") as f:
-            f.write(self._persona)
+        file_path = f"{self._storage_path}/checkpoint_{checkpoint_idx}/persona.txt"
+        safe_write_file(file_path, self._persona)
 
     def _save_hypothesis(self,  checkpoint_idx: int) -> None:
         """
         Save hypothesis list into local storage with a specific checkpoint index.
         """
-        checkpoint_dir = f"{self._storage_path}/checkpoint_{checkpoint_idx}"
-        if not os.path.exists(checkpoint_dir):
-            os.makedirs(checkpoint_dir)
-        with open(f"{checkpoint_dir}/hypothesis.json", "w") as f:
-            json.dump([i.model_dump() for i in self._persona_hypothesis_list], f, indent=2)
+        file_path = f"{self._storage_path}/checkpoint_{checkpoint_idx}/hypothesis.json"
+        safe_write_file(file_path, json.dumps([i.model_dump() for i in self._persona_hypothesis_list], indent=2))
 
     def load_checkpoint(self, checkpoint_path: str) -> None:
         """
