@@ -13,34 +13,38 @@ More importantly, Ivy runs totally on your machine to ensure privacy, so you can
 * Python 3.12+
 * Ollama (See [https://ollama.com](https://ollama.com))
 
-#### Quick start
 ```bash
 # Install dependencies using poetry
 poetry install
 
 # Start serving local LLM using Ollama
 ollama run qwen2.5:7b  # or other model of your choice
+```
 
-# Start the app
+## Usage
 
-# usage: app.py [-h] [--email EMAIL] [--password PASSWORD] [--days DAYS] [--load_implications LOAD_IMPLICATIONS] [--load_biography LOAD_BIOGRAPHY] [--digest_email DIGEST_EMAIL]
+Ivysis provides two main commands:
+#### Build or update Persona:
+```bash
+poetry run python app.py persona --email_addr example@gmail.com --email_pwd 'your-app-password' [--load_checkpoint ./checkpoints/prev] [--days 3]
 
-# options:
-#   -h, --help            show this help message and exit
-#   --email EMAIL         Email address
-#   --password PASSWORD   Password
-#   --days DAYS           Days
-#   --load_implications LOAD_IMPLICATIONS
-#                         implications file path
-#   --load_biography LOAD_BIOGRAPHY
-#                         Biography file path
-#   --digest_email DIGEST_EMAIL
-#                         Email json file path
-
-poetry run python app.py --email=example@gmail.com --password='1234 5678 abcd efgh' 
+# Arguments:
+#   --email_addr        Gmail address
+#   --email_pwd        Gmail app password
+#   --load_checkpoint  (Optional) Path to previous checkpoint directory
+#   --days            (Optional) Number of days of emails to process (default: 3)
 ```
 As a POC, we currently only support fetching emails from Gmail. 
 Please see [App Passwords](https://knowledge.workspace.google.com/kb/how-to-create-app-passwords-000009237) on instruction on how to create a "App Password" which is the Google way to grant Gmail access to applications for access programmatically.
+
+#### Build Memo Board
+```bash
+poetry run python app.py memoboard --load_persona ./persona.json --email ./email.json
+
+# Arguments:
+#   --load_persona    Path to persona data file
+#   --email          Path to email JSON file to process
+```
 
 
 ## Contributing
