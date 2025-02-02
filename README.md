@@ -26,7 +26,7 @@ ollama run qwen2.5:7b  # or other model of your choice
 Ivysis provides two main commands:
 #### Build or update Persona:
 ```bash
-poetry run python app.py persona --email_addr example@gmail.com --email_pwd 'your-app-password' [--load_checkpoint ./checkpoints/prev] [--days 3]
+poetry run python app.py persona --email_addr example@gmail.com --email_pwd 'your-app-password' [--load_checkpoint ./data/{run_id}/checkpoint_{idx}] [--days 3]
 
 # Arguments:
 #   --email_addr        Gmail address
@@ -39,7 +39,7 @@ Please see [App Passwords](https://knowledge.workspace.google.com/kb/how-to-crea
 
 #### Build Memo Board
 ```bash
-poetry run python app.py memoboard --load_persona ./persona.json --email ./email.json
+poetry run python app.py memoboard --load_persona ./persona.txt --email ./email.json
 
 # Arguments:
 #   --load_persona    Path to persona data file
