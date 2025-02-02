@@ -46,6 +46,26 @@ poetry run python app.py memoboard --load_persona ./persona.txt --email ./email.
 #   --email          Path to email JSON file to process
 ```
 
+## To Do and Roadmap
+
+#### Phase 1
+[X] Fetch past emails
+[X] Persona Formation in text form (biography)
+[ ] Auto digest new in/out emails
+[ ] Memoboard Formation
+[ ] Today's tasks highlighter
+[ ] Persistent data storing and organizing with sqlite
+[ ] Basic UI
+[ ] Package with docker compose
+[ ] Simplfied initial setup and onboarding
+
+#### Phase 2
+[ ] Schedule and reminder
+[ ] Informative updates organization
+[ ] Proactive notifications triggered by system
+[ ] Support Outlook as datasource
+[ ] Support Slack as datasource
+
 
 ## Contributing
 
